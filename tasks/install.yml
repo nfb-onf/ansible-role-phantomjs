@@ -1,0 +1,75 @@
+---
+
+# Import the apt key if defined and if it is an URL
+- name: Debian - Import repository key
+  apt_key: url="{{ phantomjs_os_repo_key }}" state=present
+  when: >
+    ansible_os_family == 'Debian' and 
+    not phantomjs_build_from_source and
+    not phantomjs_binary_install and
+    not phantomjs_os_repo_key is none and
+    phantomjs_os_repo_key | search("http://.*")
+  ignore_errors: yes
+  tags: ["debian"]
+
+# Import the apt key if defined and it is a package
+- name: Debian - Add repository package
+  apt: name="{{ phantomjs_os_repo_key }}" state=latest
+  when: >
+    ansible_os_family == 'Debian' and
+    not phantomjs_build_from_source and
+    not phantomjs_binary_install and
+    not phantomjs_os_repo_key is none and
+    not phantomjs_os_repo_key | search("http://.*")
+  tags: ["debian"]
+
+- name: Debian - Add apt repository url
+  apt_repository: repo="{{ phantomjs_os_repo_url }}" state=present
+  when: >
+    ansible_os_family == 'Debian' and
+    not phantomjs_build_from_source and
+    not phantomjs_binary_install and
+    not phantomjs_os_repo_url is none
+  tags: ["debian"]
+
+
+# Install the packages.
+- name: Debian - Install required phantomjs packages
+  apt: 
+    name: "{{ item.key }}{{ '=' + item.version | default('*') }}"
+    state: "{{ item.state | default('present') }}"
+    install_recommends: "{{ phantomjs_packages_install_recommends }}"
+  with_dict: phantomjs_packages
+  when: >
+    ansible_os_family == 'Debian' and
+    not phantomjs_build_from_source and
+    not phantomjs_binary_install
+  register: __phantomjs_installed
+  tags: ["debian"]
+
+- name: Check if packages were installed
+  set_fact: _phantomjs_reinstalled="{{ __phantomjs_installed.changed }}"
+
+
+### Section for installing from binary
+- name: "Install phantomjs binary from remote location: Get binary"
+  get_url: >
+    url={{ phantomjs_binary_location }}
+    dest={{ phantomjs_executable_path }}
+  when: >
+    phantomjs_binary_install and
+    not phantomjs_build_from_source and
+    phantomjs_binary_location | search("https?://.*")
+  register: __phantomjs_binary_from_remote
+  tags: ["phantomjs_binary", "get_remote_binary"]
+
+- name: "Install phantomjs binary from local location"
+  copy: >
+    src={{ phantomjs_binary_location }}
+    dest={{ phantomjs_executable_path }}
+    mode=0755
+  when: >
+    phantomjs_binary_install and
+    not phantomjs_build_from_source and
+    __phantomjs_binary_from_remote.skipped
+  tags: ["phantomjs_binary", "get_local_binary"]

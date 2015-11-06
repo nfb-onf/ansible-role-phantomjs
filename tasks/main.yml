@@ -1,0 +1,21 @@
+---
+
+# Check if the role is prepared to run on this system ...
+- name: Check if the phantomjs role is supported on this system
+  fail: msg="Role not supported on this system"
+  when: >
+     ansible_distribution != 'Ubuntu' and 
+     ansible_distribution != 'Debian'
+
+# Load the OS specific variables
+- name: Include OS specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
+  tags: ["phantomjs", "distribution", "packages", "service"]
+
+# Tasks to build phantomjs
+- include: build.yml
+  tags: ["phantomjs", "build"]
+
+# Tasks to install phantomjs
+- include: install.yml
+  tags: ["phantomjs", "install"]

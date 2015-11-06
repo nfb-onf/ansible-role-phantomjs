@@ -1,0 +1,13 @@
+---
+
+### Section defining the install type
+
+# Build a binary file from source
+phantomjs_build_from_source: no
+# Install from a binary file found somewhere (see: vars/< platform_name >.yml for default locations)
+phantomjs_binary_install: no
+
+### Other vars
+
+# How many build jobs to run in parallel (could be less for VMs)
+phantomjs_build_job_count: "{{ ansible_processor_cores }}"

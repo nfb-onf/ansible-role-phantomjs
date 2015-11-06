@@ -1,0 +1,6 @@
+---
+
+phantomjs_enabled_on_startup: true
+
+# Main defaults
+phantomjs_git_repository: https://github.com/ariya/phantomjs.git

@@ -1,0 +1,63 @@
+---
+# Debian/Ubuntu specific variables
+
+phantomjs_packages:
+  phantomjs:
+    version: 1.9.8
+
+
+### Section for Apt install
+phantomjs_packages_install_recommends: no
+# External repo/key where packages can be found
+phantomjs_os_repo_url: none
+phantomjs_os_repo_key: none
+
+
+### Section for binary install
+phantomjs_executable_path: /usr/local/bin/phantomjs
+phantomjs_binary_location: phantomjs-1.9.8-linux-x86_64
+#phantomjs_binary_location: "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
+
+
+### Section for building options
+phantomjs_git_clone_destination: /usr/lib/phantomjs
+phantomjs_build_command: build.sh
+phantomjs_build_args:
+# TODO: set versions for build requirements
+phantomjs_build_requirements:
+  build-essential:
+    state: latest
+  g++:
+    state: latest
+  flex:
+    state: latest
+  bison:
+    state: latest
+  gperf:
+    state: latest
+  ruby:
+    state: latest
+  perl:
+    state: latest
+  libsqlite3-dev:
+    state: latest
+  libfontconfig1-dev:
+    state: latest
+  libicu-dev:
+    state: latest
+  libfreetype6:
+    state: latest
+  libssl-dev:
+    state: latest
+  libpng12-dev:
+    state: latest
+  libjpeg-dev:
+    state: latest
+  python:
+    state: latest
+  libx11-dev:
+    state: latest
+  libxext-dev:
+    state: latest
+  ttf-mscorefonts-installer:
+    state: latest

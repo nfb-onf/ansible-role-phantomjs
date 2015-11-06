@@ -1,0 +1,43 @@
+---
+
+- name: Debian - Install required packages for build
+  apt:
+    name: "{{ item.key }}{{ '=' + item.version | default('*') }}"
+    state: "{{ item.state | default('present') }}"
+    install_recommends: "{{ phantomjs_packages_install_recommends }}"
+  with_dict: phantomjs_build_requirements
+  when: >
+    ansible_os_family == 'Debian' and
+    phantomjs_build_from_source
+  tags: ["debian", "debian_install_build_requirements"]
+
+
+# TODO: It may be useful to incorporate version numbers in the directory name, as right now
+- name: Clone the repo
+  git: >
+    repo={{ phantomjs_git_repository }}
+    dest={{ phantomjs_git_clone_destination }}
+    version={{ phantomjs_packages.phantomjs.version | default('master') }}
+  when: phantomjs_build_from_source
+  tags: ["git", "git_clone"]
+
+- name: Linux - Build phantomjs from source
+  command: >
+    {{ phantomjs_git_clone_destination }}/{{ phantomjs_build_command }} {{ phantomjs_build_args }}
+    --jobs {{ phantomjs_build_job_count }}
+    --confirm
+  args:
+    chdir: "{{ phantomjs_git_clone_destination }}"
+    creates: "{{ phantomjs_git_clone_destination }}/bin/phantomjs"
+  when: phantomjs_build_from_source
+  tags: ["linux", "linux_build_from_source"]
+
+- name: Debian - Copy built executable
+  command: "cp {{ phantomjs_git_clone_destination }}/bin/phantomjs {{ phantomjs_executable_path }}"
+  args:
+    creates: "{{ phantomjs_executable_path }}"
+  when:
+    phantomjs_build_from_source and
+    phantomjs_binary_install
+  tags: ["debian", "move_executable"]
+
