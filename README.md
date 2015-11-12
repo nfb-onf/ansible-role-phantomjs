@@ -19,9 +19,21 @@ Variables
 
 `defaults/main.yml` Contains general PhantomJS parameters
 
+```yaml
+phantomjs_enabled_on_startup: true
+phantomjs_git_repository: https://github.com/ariya/phantomjs.git
+```
+
 `vars/main.yml` Contains machine-specific parameters general to all platforms
 
+```yaml
+phantomjs_build_from_source: no
+phantomjs_binary_install: no
+phantomjs_build_job_count: "{{ ansible_processor_cores }}"
+```
+
 `vars/Debian.yml` Contains machine-and-Debian-specific parameters
+
 
 
 Examples

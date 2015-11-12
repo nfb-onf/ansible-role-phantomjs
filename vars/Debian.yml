@@ -16,7 +16,6 @@ phantomjs_os_repo_key: none
 ### Section for binary install
 phantomjs_executable_path: /usr/local/bin/phantomjs
 phantomjs_binary_location: phantomjs-1.9.8-linux-x86_64
-#phantomjs_binary_location: "https://bitbucket.org/ariya/phantomjs/downloads/phantomjs-1.9.8-linux-x86_64.tar.bz2"
 
 
 ### Section for building options

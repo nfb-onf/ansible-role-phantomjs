@@ -12,7 +12,7 @@
   tags: ["debian", "debian_install_build_requirements"]
 
 
-# TODO: It may be useful to incorporate version numbers in the directory name, as right now
+# TODO: It may be useful to incorporate version numbers in the directory name
 - name: Clone the repo
   git: >
     repo={{ phantomjs_git_repository }}
